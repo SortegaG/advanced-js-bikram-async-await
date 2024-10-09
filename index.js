@@ -207,6 +207,9 @@ async function getRandomCharacter() {
     
 }
 
+getRandomCharacter().then(datos => 
+console.log(datos))
+
 // Ejercicio 8.- Declara una función getRandomCharacterInfo que retorne de un personaje su imagen, nombre, episodios en los que aparece y el nombre del primer episodio en el que aparece + fecha de estreno,
 // tendrás que hacer otro fetch para llegar a los ultimos datos. Formato de retorno => (return {img, name, episodes, firstEpisode, dateEpisode})
 
@@ -225,23 +228,53 @@ async function getRandomCharacterInfo() {
         const data = await response.json();
         const img = data.image;
         const name = data.name;
-        const episodios = data.episode;
+        const episodes = data.episode;
 
-        const primerEpUrl = episodios[0];
-        const epResponse = await fetch(primerEpUrl);
+        const firstEpisode = episodes[0];
+        const epResponse = await fetch(episodes[0]);
 
         if (!epResponse.ok) {
             throw new Error('Error al leer la API de episodios');
         }
 
-        const epData = await epResponse.json();
-        const primerEp = epData.name;  
-        const dateEp = epData.air_date;  
-        return {img, name, episodios, primerEp, dateEp}
+        const epData = await epResponse.json(); 
+        const dateEpisode = epData.air_date;  
+        return {img, name, episodes, firstEpisode, dateEpisode}
 
     } catch {
         console.log('error')
     }
     
+
+getRandomCharacterInfo()
 }
 // Ejercicio 9.- Pinta los anteriores datos en el DOM (no se testea)
+
+getRandomCharacterInfo().then(personaje => {
+    const section = document.getElementById('ejercicio-9');
+    section.innerHTML = `<div>
+                            <img src = ${personaje.img}>
+                            <h2>Nombre: ${personaje.name}></h2>
+                            <p>Episodios: ${personaje.episodes}</p>
+                            <p>Primer episodio: ${personaje.firstEpisode}</p>
+                            <p>Fecha: ${personaje.dateEpisode}</p>
+                        </div>`
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+    getRandomCharacterInfo();
+} )
+
+// getRandomCharacterInfo().then(personaje => {
+//     const section = document.getElementById("ejercicio-9") 
+//     section.innerHTML =  `<section>
+//               <img src="${personaje.img}" alt="Personaje aleatorio">
+//               <h1>Nomrbre = ${personaje.name}</h1>
+//               <p>Episodios: ${personaje.episodes}</p>
+//               <p>Primer Episodio: ${personaje.firstEpisode}</p>
+//               <p>Fecha: ${personaje.dateEpisode}</p>
+//             </section> `
+//     }) 
+//     document.addEventListener("DOMContentLoaded", () => {
+//         getRandomCharacterInfo();
+//       });
